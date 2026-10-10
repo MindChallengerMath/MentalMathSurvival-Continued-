@@ -3,8 +3,9 @@ from PySide6.QtWidgets import (QWidget,
                               QLineEdit,
                               QPushButton,
                               QVBoxLayout,
-                              QHBoxLayout)
+                              QHBoxLayout,)
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QPixmap
 import random
 
 class Game(QWidget):
@@ -26,6 +27,10 @@ class Game(QWidget):
         self.label = QLabel(self.equation)
         self.label.setAlignment(Qt.AlignCenter)
 
+        self.playerImg = QPixmap("images/GoodGuy.png")
+        self.survivor = QLabel(self)
+        self.survivor.setPixmap(self.playerImg)
+
         self.userInput = QLineEdit()
         self.userInput.returnPressed.connect(self.enter)
         self.userInput.setAlignment(Qt.AlignCenter)
@@ -45,11 +50,14 @@ class Game(QWidget):
         self.vbox = QVBoxLayout()
         self.setLayout(self.vbox)
 
-
         self.vbox.addWidget(self.scoreLabel)
         self.vbox.addWidget(self.label)
+        self.l = QHBoxLayout()
+        self.vbox.addLayout(self.l)
+        self.l.addWidget(self.survivor)
         self.vbox.addWidget(self.userInput)
         self.vbox.addWidget(self.button)
+        
 
         self.hbox = QHBoxLayout()
 
