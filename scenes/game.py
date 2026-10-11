@@ -4,8 +4,11 @@ from PySide6.QtWidgets import (QWidget,
                               QPushButton,
                               QVBoxLayout,
                               QHBoxLayout,)
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QPixmap
+from PySide6.QtCore import (Qt)
+from PySide6.QtGui import (QPixmap,
+                           QTransform,
+                           QShortcut,
+                           QKeySequence)
 import random
 
 class Game(QWidget):
@@ -27,10 +30,12 @@ class Game(QWidget):
         self.label = QLabel(self.equation)
         self.label.setAlignment(Qt.AlignCenter)
 
-        self.playerImg = QPixmap("images/GoodGuy.png")
         self.survivor = QLabel(self)
-        self.survivor.setPixmap(self.playerImg)
-
+        self.transform = QTransform().scale(-1, 1)
+        self.leftSide = QPixmap("images/GoodGuy.png")
+        self.rightSide = self.leftSide.transformed(self.transform)
+        self.playerModel = self.leftSide
+        self.survivor.setPixmap(self.playerModel)
         self.userInput = QLineEdit()
         self.userInput.returnPressed.connect(self.enter)
         self.userInput.setAlignment(Qt.AlignCenter)
@@ -67,6 +72,8 @@ class Game(QWidget):
 
         self.hbox.addWidget(self.mainMenuButton)
         self.mainMenuButton.hide()
+    def movement(self):
+        pass
     def enter(self, value=0):
         try:
             value = round(float(self.userInput.text()), 2)
