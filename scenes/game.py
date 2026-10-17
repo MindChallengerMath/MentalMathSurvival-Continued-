@@ -3,12 +3,15 @@ from PySide6.QtWidgets import (QWidget,
                               QLineEdit,
                               QPushButton,
                               QVBoxLayout,
-                              QHBoxLayout,)
+                              QHBoxLayout,
+                              QApplication
+                              )
 from PySide6.QtCore import (Qt)
 from PySide6.QtGui import (QPixmap,
                            QTransform,
                            QShortcut,
-                           QKeySequence)
+                           QKeySequence,
+                           QKeyEvent)
 import random
 
 class Game(QWidget):
@@ -36,10 +39,12 @@ class Game(QWidget):
         self.rightSide = self.leftSide.transformed(self.transform)
         self.playerModel = self.leftSide
         self.survivor.setPixmap(self.playerModel)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.setFocus(Qt.FocusReason.OtherFocusReason)
         self.userInput = QLineEdit()
         self.userInput.returnPressed.connect(self.enter)
         self.userInput.setAlignment(Qt.AlignCenter)
-        
+        self.a = QKeySequence()
 
         self.button = QPushButton("Enter")
         self.button.clicked.connect(self.enter)
@@ -51,6 +56,7 @@ class Game(QWidget):
         self.mainMenuButton.clicked.connect(self.mainMenu)
 
         self.initUI()
+        
     def initUI(self):
         self.vbox = QVBoxLayout()
         self.setLayout(self.vbox)
@@ -69,11 +75,15 @@ class Game(QWidget):
         self.vbox.addLayout(self.hbox)
         self.hbox.addWidget(self.restartButton)
         self.restartButton.hide()
-
+    
         self.hbox.addWidget(self.mainMenuButton)
         self.mainMenuButton.hide()
-    def movement(self):
-        pass
+    def keyPressEvent(self, event:QKeyEvent):
+        
+        print(event.key())
+        if event.key() == Qt.Key.Key_D:
+            print("Press D")
+        return super().keyPressEvent(event)
     def enter(self, value=0):
         try:
             value = round(float(self.userInput.text()), 2)
@@ -142,4 +152,6 @@ class Game(QWidget):
             self.answer = round(self.operations.divide(self.n1, self.n2), 2)
 
         self.equation = f"{self.n1} {self.sign} {self.n2}"
+
+
         
