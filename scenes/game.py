@@ -37,8 +37,9 @@ class Game(QWidget):
         self.transform = QTransform().scale(-1, 1)
         self.leftSide = QPixmap("images/GoodGuy.png")
         self.rightSide = self.leftSide.transformed(self.transform)
-        self.playerModel = self.leftSide
-        self.survivor.setPixmap(self.playerModel)
+        self.survivor.setPixmap(self.leftSide)
+        self.survivorX = self.survivor.x()
+        self.survivorY = self.survivor.y() + 500
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setFocus(Qt.FocusReason.OtherFocusReason)
         self.userInput = QLineEdit()
@@ -78,12 +79,22 @@ class Game(QWidget):
     
         self.hbox.addWidget(self.mainMenuButton)
         self.mainMenuButton.hide()
-    def keyPressEvent(self, event:QKeyEvent):
+    def keyPressEvent(self, event):
         
-        print(event.key())
-        if event.key() == Qt.Key.Key_D:
+        key = event.key()
+        if key == Qt.Key.Key_D:
+            self.survivor.setPixmap(self.rightSide)
+            self.survivorX += 1
+            self.survivor.move(self.survivorX, self.survivorY)
+            print()
             print("Press D")
-        return super().keyPressEvent(event)
+            print(self.survivorX)
+            print(self.survivorY)
+            print(self.survivor.pos())
+        elif key == Qt.Key.Key_A:
+            self.survivorX -= 1
+            self.survivor.setPixmap(self.leftSide)
+            self.survivor.move(self.survivorX, self.survivorY)
     def enter(self, value=0):
         try:
             value = round(float(self.userInput.text()), 2)
